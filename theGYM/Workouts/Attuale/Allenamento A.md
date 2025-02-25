@@ -5,534 +5,97 @@
 * Mobilità articolare (gambe, anche, spalle)
 
 # Allenamento:
-## Hack Squat Machine:
+## Hack Squat :
 ### 3-4 serie x 6-8 ripetizioni (Recupero: 2-3 minuti)
 ```dataviewjs
-const config = {
-    exercise: "Hack Squat",
-    limit: 12,
-    templatePath: "theGYM/Log/Data",
-    timestampFormat: 'MMDD-HHmmss',  // Formato modificato
-    template: {
-        fields: [
-            "Rep",
-            "Weight",
-            "Volume"
-        ],
-        additionalFields: (exercise, currentPage) => [
-            `Esercizio::[[${exercise}]]`,
-            `Origine:: ${currentPage}`
-        ]
+// Utilizzo corretto per Leg Press
+await dv.view("theGYM/Scripts/ExerciseLogTable", {
+    input: {
+        exercise: "Hack Squat",
+        limit: 12,
+        searchByName: true,
     }
-};
-
-const currentPage = dv.current().file.link;
-
-// Funzione per generare il template
-const generateTemplate = (exercise, currentPage) => {
-    const fields = config.template.fields.map(field => `${field}:`);
-    const additionalFields = config.template.additionalFields(exercise, currentPage);
-    
-    return [
-        "---",
-        ...fields,
-        "---",
-        ...additionalFields
-    ].join('\n');
-};
-
-// Creiamo e stiliamo il pulsante
-const buttonMaker = this.container.createEl('button', {
-    text: "➕ Aggiungi Log",
-    cls: "add-log-button"
 });
-
-// Stili del pulsante
-buttonMaker.style.cssText = `
-    background-color: var(--interactive-accent);
-    color: var(--text-on-accent);
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: background-color 0.2s ease;
-`;
-
-// Effetti hover
-buttonMaker.addEventListener('mouseover', () => {
-    buttonMaker.style.backgroundColor = 'var(--interactive-accent-hover)';
-});
-buttonMaker.addEventListener('mouseout', () => {
-    buttonMaker.style.backgroundColor = 'var(--interactive-accent)';
-});
-
-// Funzionalità del pulsante
-buttonMaker.addEventListener('click', async () => {
-    const timestamp = moment().format(config.timestampFormat);
-    const newFileName = `${config.templatePath}/${config.exercise}-${timestamp}.md`;  // Nome file modificato
-    const template = generateTemplate(config.exercise, currentPage);
-    
-    await app.vault.create(newFileName, template);
-    app.workspace.openLinkText(newFileName, '', true);
-});
-
-// Query per la tabella
-dv.table(
-    ["Data", "Esercizio", "Ripetizioni", "Peso (kg)", "Volume", "Link"],
-    dv.pages(`"${config.templatePath}"`)
-        .where(p => p.Esercizio?.path === dv.page(config.exercise).file.path)
-        .sort(p => p.file.ctime, 'asc')
-        .limit(config.limit)
-        .map(p => [
-            p.file.ctime,
-            p.Esercizio,
-            p.Rep,
-            p.Weight,
-            p.Volume,
-            p.file.link
-        ])
-);
 ```
 ## Leg Press 45°:
 ### 3 serie x 8-10 ripetizioni (Recupero: 90 secondi)
 ```dataviewjs
-const exercise = "Leg Press 45";
-const limit = 9;
-const currentPage = dv.current().file.link;
-// Creiamo e stiliamo il pulsante
-const buttonMaker = this.container.createEl('button', {
-    text: "➕ Aggiungi Log",
-    cls: "add-log-button"
+// Utilizzo corretto per Leg Press
+await dv.view("theGYM/Scripts/ExerciseLogTable", {
+    input: {
+        exercise: "Leg Press 45",
+        limit: 12,
+        searchByName: true,
+
+    }
 });
-
-// Stili del pulsante
-buttonMaker.style.cssText = `
-    background-color: var(--interactive-accent);
-    color: var(--text-on-accent);
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: background-color 0.2s ease;
-`;
-
-// Effetti hover
-buttonMaker.addEventListener('mouseover', () => {
-    buttonMaker.style.backgroundColor = 'var(--interactive-accent-hover)';
-});
-
-buttonMaker.addEventListener('mouseout', () => {
-    buttonMaker.style.backgroundColor = 'var(--interactive-accent)';
-});
-
-// Funzionalità del pulsante con timestamp che include i secondi
-buttonMaker.addEventListener('click', async () => {
-    const timestamp = moment().format('MMDD-HHmmss');
-    const newFileName = `theGYM/Log/Data/${exercise}-${timestamp}.md`;
-    const template = [
-        "---",
-        "Rep:",
-        "Weight:",
-        "Volume:",
-        "---",
-        `Esercizio::[[${exercise}]]`,
-        `Origine:: ${currentPage}`
-    ].join('\n');
-    
-    await app.vault.create(newFileName, template);
-    app.workspace.openLinkText(newFileName, '', true);
-});
-
-// Query corretta per gestire i link
-dv.table(
-    ["Data", "Esercizio", "Ripetizioni", "Peso (kg)", "Volume","Link"],
-    dv.pages('"theGYM/Log/Data"')
-        .where(p => p.Esercizio?.path === dv.page(exercise).file.path)
-        .sort(p => p.file.ctime, 'asc')
-        .limit(limit)
-        .map(p => [
-            p.file.ctime,
-            p.Esercizio,
-            p.Rep,
-            p.Weight,
-            p.Volume,
-            p.file.link
-        ])
-);
 ```
+
 ## Leg Extension:
 ### 3 serie x 10-12 ripetizioni (Recupero: 60 secondi)
 ```dataviewjs
-const exercise = "Leg Extension";
-const limit = 9;
-const currentPage = dv.current().file.link;
-// Creiamo e stiliamo il pulsante
-const buttonMaker = this.container.createEl('button', {
-    text: "➕ Aggiungi Log",
-    cls: "add-log-button"
+// Utilizzo corretto per Leg Press
+await dv.view("theGYM/Scripts/ExerciseLogTable", {
+    input: {
+        exercise: "Leg Extension",
+        limit: 12,
+        searchByName: true,
+
+    }
 });
-
-// Stili del pulsante
-buttonMaker.style.cssText = `
-    background-color: var(--interactive-accent);
-    color: var(--text-on-accent);
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: background-color 0.2s ease;
-`;
-
-// Effetti hover
-buttonMaker.addEventListener('mouseover', () => {
-    buttonMaker.style.backgroundColor = 'var(--interactive-accent-hover)';
-});
-
-buttonMaker.addEventListener('mouseout', () => {
-    buttonMaker.style.backgroundColor = 'var(--interactive-accent)';
-});
-
-// Funzionalità del pulsante con timestamp che include i secondi
-buttonMaker.addEventListener('click', async () => {
-const timestamp = moment().format('MMDD-HHmmss');
-    const newFileName = `theGYM/Log/Data/${exercise}-${timestamp}.md`;
-    const template = [
-        "---",
-        "Rep:",
-        "Weight:",
-        "Volume:",
-        "---",
-        `Esercizio::[[${exercise}]]`,
-        `Origine:: ${currentPage}`
-    ].join('\n');
-    
-    await app.vault.create(newFileName, template);
-    app.workspace.openLinkText(newFileName, '', true);
-});
-
-// Query corretta per gestire i link
-dv.table(
-    ["Data", "Esercizio", "Ripetizioni", "Peso (kg)", "Volume","Link"],
-    dv.pages('"theGYM/Log/Data"')
-        .where(p => p.Esercizio?.path === dv.page(exercise).file.path)
-        .sort(p => p.file.ctime, 'asc')
-        .limit(limit)
-        .map(p => [
-            p.file.ctime,
-            p.Esercizio,
-            p.Rep,
-            p.Weight,
-            p.Volume,
-            p.file.link
-        ])
-);
 ```
 ## Affondi allo Smith Machine:
 ### 3 serie x 10-12 ripetizioni per gamba (Recupero: 60 secondi per gamba)
 ```dataviewjs
-// Definiamo la variabile per l'esercizio
-const exercise = "Affondi allo Smith Machine";
-const limit = 12; // 3x4const currentPage = dv.current().file.link;
-// Creiamo e stiliamo il pulsante
-const buttonMaker = this.container.createEl('button', {
-    text: "➕ Aggiungi Log",
-    cls: "add-log-button"
+// Utilizzo corretto per Leg Press
+await dv.view("theGYM/Scripts/ExerciseLogTable", {
+    input: {
+        exercise: "Affondi allo Smith Machine",
+        limit: 12,
+        searchByName: true,
+
+    }
 });
-
-// Stili del pulsante
-buttonMaker.style.cssText = `
-    background-color: var(--interactive-accent);
-    color: var(--text-on-accent);
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: background-color 0.2s ease;
-`;
-
-// Effetti hover
-buttonMaker.addEventListener('mouseover', () => {
-    buttonMaker.style.backgroundColor = 'var(--interactive-accent-hover)';
-});
-
-buttonMaker.addEventListener('mouseout', () => {
-    buttonMaker.style.backgroundColor = 'var(--interactive-accent)';
-});
-
-// Funzionalità del pulsante con timestamp che include i secondi
-buttonMaker.addEventListener('click', async () => {
-const timestamp = moment().format('MMDD-HHmmss');
-    const newFileName = `theGYM/Log/Data/${exercise}-${timestamp}.md`;
-    const template = [
-        "---",
-        "Rep:",
-        "Weight:",
-        "Volume:",
-        "---",
-        `Esercizio::[[${exercise}]]`,
-        `Origine:: ${currentPage}`
-    ].join('\n');
-    
-    await app.vault.create(newFileName, template);
-    app.workspace.openLinkText(newFileName, '', true);
-});
-
-// Query corretta per gestire i link
-dv.table(
-    ["Data", "Esercizio", "Ripetizioni", "Peso (kg)", "Volume","Link"],
-    dv.pages('"theGYM/Log/Data"')
-        .where(p => p.Esercizio?.path === dv.page(exercise).file.path)
-        .sort(p => p.file.ctime, 'asc')
-        .limit(limit)
-        .map(p => [
-            p.file.ctime,
-            p.Esercizio,
-            p.Rep,
-            p.Weight,
-            p.Volume,
-            p.file.link
-        ])
-);
 ```
  
-## Chest Press Machine:
+## Chest Press:
 ### 3 serie x 6-8 ripetizioni (Recupero: 2-3 minuti)
 ```dataviewjs
-// Definiamo la variabile per l'esercizio
-const exercise = "chest press";
-const limit = 9; // 3x4
-const currentPage = dv.current().file.link;
-// Creiamo e stiliamo il pulsante
-const buttonMaker = this.container.createEl('button', {
-    text: "➕ Aggiungi Log",
-    cls: "add-log-button"
+// Utilizzo corretto per Leg Press
+await dv.view("theGYM/Scripts/ExerciseLogTable", {
+    input: {
+        exercise: "Chest Press",
+        limit: 12,
+        exactMatch:true,
+
+    }
 });
-
-// Stili del pulsante
-buttonMaker.style.cssText = `
-    background-color: var(--interactive-accent);
-    color: var(--text-on-accent);
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: background-color 0.2s ease;
-`;
-
-// Effetti hover
-buttonMaker.addEventListener('mouseover', () => {
-    buttonMaker.style.backgroundColor = 'var(--interactive-accent-hover)';
-});
-
-buttonMaker.addEventListener('mouseout', () => {
-    buttonMaker.style.backgroundColor = 'var(--interactive-accent)';
-});
-
-// Funzionalità del pulsante con timestamp che include i secondi
-buttonMaker.addEventListener('click', async () => {
-const timestamp = moment().format('MMDD-HHmmss');
-    const newFileName = `theGYM/Log/Data/${exercise}-${timestamp}.md`;
-    const template = [
-        "---",
-        "Rep:",
-        "Weight:",
-        "Volume:",
-        "---",
-        `Esercizio::[[${exercise}]]`,
-        `Origine:: ${currentPage}`
-    ].join('\n');
-    
-    await app.vault.create(newFileName, template);
-    app.workspace.openLinkText(newFileName, '', true);
-});
-
-// Query corretta per gestire i link
-dv.table(
-    ["Data", "Esercizio", "Ripetizioni", "Peso (kg)", "Volume","Link"],
-    dv.pages('"theGYM/Log/Data"')
-        .where(p => p.Esercizio?.path === dv.page(exercise).file.path)
-        .sort(p => p.file.ctime, 'asc')
-        .limit(limit)
-        .map(p => [
-            p.file.ctime,
-            p.Esercizio,
-            p.Rep,
-            p.Weight,
-            p.Volume,
-            p.file.link
-        ])
-);
 ```
-## Incline Chest Press Machine:
+## Inclined Chest Press:
 ### 3 serie x 8-10 ripetizioni (Recupero: 90 secondi)
 ```dataviewjs
-// Definiamo la variabile per l'esercizio
-const exercise = "inclined chest press";
-const limit = 12; // 3x4
-const currentPage = dv.current().file.link;
-// Creiamo e stiliamo il pulsante
-const buttonMaker = this.container.createEl('button', {
-    text: "➕ Aggiungi Log",
-    cls: "add-log-button"
+// Utilizzo corretto per Leg Press
+await dv.view("theGYM/Scripts/ExerciseLogTable", {
+    input: {
+        exercise: "Inclined Chest Press",
+        limit: 12,
+        exactMatch:true,
+        debug: true
+    }
 });
-
-// Stili del pulsante
-buttonMaker.style.cssText = `
-    background-color: var(--interactive-accent);
-    color: var(--text-on-accent);
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: background-color 0.2s ease;
-`;
-
-// Effetti hover
-buttonMaker.addEventListener('mouseover', () => {
-    buttonMaker.style.backgroundColor = 'var(--interactive-accent-hover)';
-});
-
-buttonMaker.addEventListener('mouseout', () => {
-    buttonMaker.style.backgroundColor = 'var(--interactive-accent)';
-});
-
-// Funzionalità del pulsante con timestamp che include i secondi
-buttonMaker.addEventListener('click', async () => {
-const timestamp = moment().format('MMDD-HHmmss');
-    const newFileName = `theGYM/Log/Data/${exercise}-${timestamp}.md`;
-    const template = [
-        "---",
-        "Rep:",
-        "Weight:",
-        "Volume:",
-        "---",
-        `Esercizio::[[${exercise}]]`,
-        `Origine:: ${currentPage}`
-    ].join('\n');
-    
-    await app.vault.create(newFileName, template);
-    app.workspace.openLinkText(newFileName, '', true);
-});
-
-// Query corretta per gestire i link
-dv.table(
-    ["Data", "Esercizio", "Ripetizioni", "Peso (kg)", "Volume","Link"],
-    dv.pages('"theGYM/Log/Data"')
-        .where(p => p.Esercizio?.path === dv.page(exercise).file.path)
-        .sort(p => p.file.ctime, 'asc')
-        .limit(limit)
-        .map(p => [
-            p.file.ctime,
-            p.Esercizio,
-            p.Rep,
-            p.Weight,
-            p.Volume,
-            p.file.link
-        ])
-);
 ```
 ## Croci ai Cavi:
 ### 2 serie x 12-15 ripetizioni (Recupero: 60 secondi)
 ```dataviewjs
-// Definiamo la variabile per l'esercizio
-const exercise = "Croci ai Cavi";
-const limit = 6;
-const currentPage = dv.current().file.link;
-// Creiamo e stiliamo il pulsante
-const buttonMaker = this.container.createEl('button', {
-    text: "➕ Aggiungi Log",
-    cls: "add-log-button"
+// Utilizzo corretto per Leg Press
+await dv.view("theGYM/Scripts/ExerciseLogTable", {
+    input: {
+        exercise: "Croci ai Cavi",
+        limit: 12,
+        exactMatch:true,
+
+    }
 });
-
-// Stili del pulsante
-buttonMaker.style.cssText = `
-    background-color: var(--interactive-accent);
-    color: var(--text-on-accent);
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: background-color 0.2s ease;
-`;
-
-// Effetti hover
-buttonMaker.addEventListener('mouseover', () => {
-    buttonMaker.style.backgroundColor = 'var(--interactive-accent-hover)';
-});
-
-buttonMaker.addEventListener('mouseout', () => {
-    buttonMaker.style.backgroundColor = 'var(--interactive-accent)';
-});
-
-// Funzionalità del pulsante con timestamp che include i secondi
-buttonMaker.addEventListener('click', async () => {
-const timestamp = moment().format('MMDD-HHmmss');
-    const newFileName = `theGYM/Log/Data/${exercise}-${timestamp}.md`;
-    const template = [
-        "---",
-        "Rep:",
-        "Weight:",
-        "Volume:",
-        "---",
-        `Esercizio::[[${exercise}]]`,
-        `Origine:: ${currentPage}`
-    ].join('\n');
-    
-    await app.vault.create(newFileName, template);
-    app.workspace.openLinkText(newFileName, '', true);
-});
-
-// Query corretta per gestire i link
-dv.table(
-    ["Data", "Esercizio", "Ripetizioni", "Peso (kg)", "Volume","Link"],
-    dv.pages('"theGYM/Log/Data"')
-        .where(p => p.Esercizio?.path === dv.page(exercise).file.path)
-        .sort(p => p.file.ctime, 'asc')
-        .limit(limit)
-        .map(p => [
-            p.file.ctime,
-            p.Esercizio,
-            p.Rep,
-            p.Weight,
-            p.Volume,
-            p.file.link
-        ])
-);
 ```
 
 **Circuito (Opzionale - Scegli uno):**
